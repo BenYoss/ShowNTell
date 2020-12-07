@@ -8,8 +8,8 @@ const cookieParser = require('cookie-parser');
 require('dotenv').config();
 require('./db/index');
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
+const accountSid = process.env.TWILIO_CLIENT_ID;
+const authToken = process.env.TWILIO_SECRET;
 const Notifs = require('twilio')(accountSid, authToken);
 const { GoogleStrategy } = require('./oauth/passport');
 const { Users, Posts, Shows, Replys } = require('./db/schema.js');
@@ -35,7 +35,7 @@ passport.deserializeUser((user, done) => {
 
 app.use(
   session({
-    secret: process.env.GOOGLE_CLIENT_SECRET,
+    secret: process.env.CLIENT_SECRET,
     saveUninitialized: false,
     resave: true,
   }),

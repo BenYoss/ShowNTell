@@ -27,6 +27,7 @@ const App = () => {
   const [test, setTest] = useState(false);
 
   const changeView = (newView) => {
+    console.warn(process.env.CLIENT_ID);
     setView(newView);
   };
 
