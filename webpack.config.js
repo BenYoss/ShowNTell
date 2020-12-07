@@ -1,4 +1,6 @@
 const path = require('path');
+const webpack = require('webpack');
+const dotenv = require('dotenv');
 
 module.exports = {
   mode: 'development',
@@ -7,7 +9,6 @@ module.exports = {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'client', 'dist'),
   },
-  devtool: 'eval-source-map',
   watch: true,
   module: {
     rules: [{
@@ -26,4 +27,17 @@ module.exports = {
       loader: 'file-loader',
     }],
   },
+  devtool: 'eval-source-map',
+  resolve: {
+    extensions: ['.js', '.jsx'],
+    fallback: {
+      path: require.resolve('path-browserify'),
+      fs: false,
+    },
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify(dotenv.config().parsed),
+    }),
+  ],
 };
