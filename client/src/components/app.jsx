@@ -16,6 +16,7 @@ import DMs from './DMs/dms.jsx';
 import Notifs from './Notifications/notifs.jsx';
 import SearchFeed from './SearchBar/searchFeed.jsx';
 import ShowFeed from './Subscriptions/showFeed.jsx';
+import './app.css';
 
 const App = () => {
   const [posts, setPosts] = useState();
@@ -157,7 +158,7 @@ const App = () => {
           </a>
         )}
       {getUser()}
-      {getPosts()}
+      {/* {getPosts()} */}
       {userClicked ? (
         <button onClick={handleShowFeed}>Show Home Feed</button>
       ) : null}
