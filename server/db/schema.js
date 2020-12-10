@@ -9,6 +9,9 @@ const userSchema = mongoose.Schema({
   notifs: Array,
   follows: Array,
   subscriptions: Array,
+  image: String,
+  favShow: String,
+  description: String,
 });
 
 const Users = mongoose.model('Users', userSchema);
@@ -18,6 +21,8 @@ const showSchema = mongoose.Schema({
   id: Number,
   posts: Array,
   subscriberCount: Number,
+  rating: Number,
+  comment: String,
 });
 
 const Shows = mongoose.model('Shows', showSchema);
@@ -40,6 +45,7 @@ const replySchema = mongoose.Schema({
   comment: Array,
   createdAt: Date,
   likes: Array,
+  image: String,
 });
 
 const Replys = mongoose.model('Replys', replySchema);

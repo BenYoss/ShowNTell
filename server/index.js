@@ -424,6 +424,29 @@ app.get('/replys/:id/:content', (req, res) => {
   });
 });
 
+app.post('/replys/gif', (req, res) => {
+  Users.findOne({ id: req.cookies.ShowNTellId }).then((data) => {
+    userInfo = data;
+    Replys.create({
+      user: userInfo._id,
+      content: req.body.url,
+      comment: [],
+      likes: [],
+    }).then(({ _id }) => {
+      Replys.findOne({ _id: req.body.feed }).then((data) => {
+        Replys.updateOne(
+          { _id: req.body.feed },
+          { comment: [...data.comment, _id] },
+        )
+          .then(() => Replys.findOne({ _id: req.body.feed }))
+          .then((result) => {
+            res.json(result);
+          });
+      });
+    });
+  });
+});
+
 app.get('/feeds/:id', (req, res) => {
   Replys.findOne({ _id: req.params.id }).then((data) => res.json(data));
 });
@@ -477,6 +500,14 @@ app.get('/likedPost/:id', (req, res) => {
       }
     });
   });
+});
+
+app.put('user/profile', (req, res) => {
+  console.warn(req.body);
+  // Users.findOneAndUpdate(
+  //   { id: req.cookies.ShowNTellId },
+  //   { },
+  // );
 });
 
 app.listen(3000, () => {
