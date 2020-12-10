@@ -23,7 +23,7 @@ const Sub = ({ user, setView }) => {
   return (
     <div id="profileDiv">
       <Profile />
-      <h1 id="header" style={{ position: 'absolute', left: '45%', width: '100%', top: '30%' }}>Subscriptions:</h1>
+      <h1 id="header" style={{ position: 'absolute', left: '45%', width: '100%', top: '25%' }}>Subscriptions:</h1>
       <div style={{ position: 'absolute', left: '55%', bottom: '50%', width: '100%' }}>
         {getSubs()}
         {subs.map((sub, i) => (

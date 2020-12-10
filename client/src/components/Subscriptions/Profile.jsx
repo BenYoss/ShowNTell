@@ -51,16 +51,21 @@ export default function Profile() {
 
   const handleCancel = () => setOpen(false);
 
+  const showChange = (e) => {
+    const favShow = e.target.value;
+    setValues({ ...values, show: favShow });
+  };
+
+  const descriptionChange = (e) => {
+    const des = e.target.value;
+    setValues({ ...values, description: des });
+  };
+
   const handleSubmit = () => {
     // retrieve the data from the DialogContent
     setOpen(false);
     // axios.post('')
   };
-
-  // both of these work
-  const showChange = (e) => console.log('show', e.target.value);
-
-  const descriptionChange = (e) => console.log('description', e.target.value);
 
   const classes = useStyles();
 
