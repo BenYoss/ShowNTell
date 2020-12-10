@@ -1,9 +1,79 @@
+/* eslint-disable max-len */
 import React, { useState } from 'react';
 import './search.css';
+import Typography from '@material-ui/core/Typography';
+import { withStyles, makeStyles, createMuiTheme } from '@material-ui/core/styles';
+import Rating from '@material-ui/lab/Rating';
+import LiveTvIcon from '@material-ui/icons/LiveTv';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { green } from '@material-ui/core/colors';
 import noImgAvail from './no_img_avail.png';
 
-const SearchFeedEntry = ({ show, onClick }) => {
+const StyledRating = withStyles({
+  iconFilled: {
+    color: '#dd3e42',
+  },
+})(Rating);
+
+const ValidationTextField = withStyles({
+  root: {
+    '& input:valid + fieldset': {
+      borderColor: 'green',
+      borderWidth: 2,
+    },
+    '& input:invalid + fieldset': {
+      borderColor: 'red',
+      borderWidth: 2,
+    },
+    '& input:valid:focus + fieldset': {
+      borderLeftWidth: 6,
+      padding: '4px !important',
+    },
+  },
+})(TextField);
+
+const labels = {
+  0.5: 'The Worst!',
+  1: 'Terrible',
+  1.5: 'Poor',
+  2: 'A Waste',
+  2.5: 'Really Bad',
+  3: 'Ok',
+  3.5: 'Good',
+  4: 'Great',
+  4.5: 'Excellent',
+  5: 'Perfect!',
+};
+
+const theme = createMuiTheme({
+  palette: {
+    primary: green,
+  },
+});
+
+const useStyles = makeStyles({
+  root: {
+    width: 200,
+    display: 'flex',
+    alignItems: 'center',
+    marginLeft: '5vw',
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+});
+const SearchFeedEntry = ({ show }) => {
+  const [value, setValue] = useState(0);
+  const [hover, setHover] = useState(-1);
+  const classes = useStyles();
   const [state, setState] = useState('');
+  const [showPopUp, setShowPopUp] = useState({});
+  const [text, setText] = useState('');
+
+  const handleChange = (event) => {
+    setText(event.target.value);
+  };
 
   const getSummary = () => {
     let summary = show.summary.replace(/<p>|<\/p>/g, '');
@@ -44,23 +114,67 @@ const SearchFeedEntry = ({ show, onClick }) => {
     }
   };
 
-  const Arrow = ({ text, className }) => {
-    return (
-      <div
-        className={className}
-      >
-        {text}
-      </div>
-    );
-  };
-
-  const ArrowLeft = Arrow({ text: '<', className: 'arrow-prev' });
-  const ArrowRight = Arrow({ text: '>', className: 'arrow-next' });
-
   return (
     <div className="show-card">
-      <div className="show-name" value={show.id} onClick={() => onClick(show)}>
+      <div className="show-name" value={show.id}>
         <div className="show-name">{show.name}</div>
+        { show.rating && show.rating.average ? (
+          <>
+            <Typography component="legend">Average Rating</Typography>
+            <StyledRating
+              name="customized-color"
+              value={show.rating.average / 2}
+              getLabelText={(value) => `${value} Tv${value !== 1 ? 's' : ''}`}
+              precision={0.1}
+              readOnly
+              icon={<LiveTvIcon fontSize="inherit" />}
+            />
+          </>
+
+        ) : <Typography component="legend">Average Rating N/A</Typography> }
+        <>
+          <Typography component="legend">Your Rating</Typography>
+          <div className={classes.root}>
+            <Rating
+              name={show.name}
+              defaultValue={0}
+              value={value}
+              precision={0.5}
+              onChange={(event, newValue) => {
+                setValue(newValue);
+              }}
+              onChangeActive={(event, newHover) => {
+                setHover(newHover);
+              }}
+              onClick={() => setShowPopUp({ [show.id]: true })}
+            />
+            { value !== null && <Typography ml={2}>{ labels[hover !== -1 ? hover : value] }</Typography> }
+          </div>
+
+        </>
+        <br />
+        { showPopUp[show.id] && (
+          <form>
+            <div style={{ margin: 'auto', width: '10vw', borderRadius: '20px', backgroundColor: 'white', paddingBottom: '5px' }}>
+              <ValidationTextField
+                className={classes.margin}
+                multiline
+                label="comments"
+                rowsMax={4}
+                required
+                variant="filled"
+                value={text}
+                id="validation-outlined-input"
+                onChange={handleChange}
+
+              />
+              <br />
+              <Button onClick={() => setShowPopUp({})} variant="contained" color="primary" href="#contained-buttons">
+                Submit
+              </Button>
+            </div>
+          </form>
+        ) }
         <img className="show-img" src={getImage()} alt="" />
         <img className="unavail-img" src={getPicUnavail()} alt="" />
         <button
