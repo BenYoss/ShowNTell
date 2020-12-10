@@ -27,7 +27,7 @@ const Post = ({ user, createPost }) => {
     placeholder: 'Edit Me',
     events: {
       focus(e, editor) {
-        console.warn(editor.selection.get());
+        console.warn(test, e);
       },
     },
   };
@@ -71,7 +71,9 @@ const Post = ({ user, createPost }) => {
           <input id="post-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="title" />
         </div>
         <div className="content-container">
-          <FroalaEditor tag="textarea" id="post-text" model={content} onModelChange={(e) => setContent(e)} placeholder="what's your message?" />
+          <FroalaEditor config={config} tag="textarea" id="post-text" model={content} onModelChange={(e) => setContent(e)} placeholder="what's your message?" />
+          <FroalaEditorImg config={config} />
+          <FroalaEditorView config={config} model={content} />
         </div>
         <button id="submit-button" onClick={onClick}>submit post</button>
         <h4 id="error-message">{error}</h4>

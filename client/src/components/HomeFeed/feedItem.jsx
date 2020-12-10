@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import htmlParser from 'react-html-parser';
 import './homefeed.css';
 import { FaHeart, FaRegCommentDots, FaTimes } from 'react-icons/fa';
 import Reply from './reply.jsx';
@@ -45,7 +46,7 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
         <h4 className="post-author">{`${name}`}</h4>
         <div id="post-content">
           {
-        currentPost.content.includes('</p>') ? JSON.parse(currentPost.content) : currentPost.content
+        currentPost.content.includes('</p>') ? (htmlParser(currentPost.content)) : currentPost.content
         }
         </div>
         <div className="post-btn-container">
