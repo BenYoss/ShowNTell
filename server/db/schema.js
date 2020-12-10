@@ -9,6 +9,9 @@ const userSchema = mongoose.Schema({
   notifs: Array,
   follows: Array,
   subscriptions: Array,
+  image: String,
+  favShow: String,
+  aboutMe: String,
 });
 
 const Users = mongoose.model('Users', userSchema);
