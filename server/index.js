@@ -17,7 +17,6 @@ const { Users, Posts, Shows, Replys } = require('./db/schema.js');
 const app = express();
 
 const client = path.resolve(__dirname, '..', 'client', 'dist');
-
 let userInfo = null;
 
 app.use(express.static(client));
@@ -333,7 +332,7 @@ app.get('/notifs/:text/:id', (req, res) => {
       Notifs.messages
         .create({
           body: req.params.text,
-          from: '+12678677568',
+          from: '+17698889365',
           to: userInfo.phone,
         })
         .then((message) => res.json(message.sid))

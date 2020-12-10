@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack --watch",
+    "test": "mocha test",
+    "build": "webpack",
     "start": "nodemon server/index.js"
   },
   "husky": {
@@ -38,6 +38,7 @@
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.3",
     "browserify": "^17.0.0",
+    "chai": "^4.2.0",
     "clsx": "^1.1.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -47,6 +48,7 @@
     "express-session": "^1.17.1",
     "file-loader": "^6.2.0",
     "jquery": "^3.5.1",
+    "mocha": "^8.2.1",
     "mongoose": "^5.10.15",
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
