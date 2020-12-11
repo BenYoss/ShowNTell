@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Dropzone from 'react-dropzone';
 import request from 'superagent';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -15,7 +15,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: '48%',
     position: 'absolute',
@@ -32,42 +32,56 @@ const useStyles = makeStyles({
   space: {
     marginBottom: 15,
   },
-});
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
 
 export default function Profile() {
-  const [open, setOpen] = React.useState(false);
-  const [values, setValues] = React.useState({
-    // state will equal info from the currently logged in user OR these default values
-    image: '', show: 'Share your favorite show!', description: 'Say a little about yourself!',
+  const [open, setOpen] = useState(false);
+  const [values, setValues] = useState({
+    image: '', show: '', description: '', id: '',
   });
 
-  //  USE USE EFFECT HERE
-  // const getCurrentUser = () => {
-  //   return axios.get('/user')
-  //     .then((res) => {
-  //       console.log(res);
-  //     })
-  //     .catch((err) => console.log(err));
-  // };
+  useEffect(() => {
+    return axios.get('/user')
+      .then(({ data }) => {
+        setValues({ ...values,
+          image: data.image !== undefined ? data.image : 'https://www.uoh.cl/assets/img/no_img.jpg',
+          show: data.favShow !== undefined ? data.favShow : 'Share your favorite show!',
+          description: data.description !== undefined ? data.description : 'Say a little about yourself!',
+          id: data._id !== undefined ? data._id : null });
+      })
+      .catch((err) => console.warn(err));
+  }, []);
 
   const handleClickOpen = () => setOpen(true);
 
   const handleCancel = () => setOpen(false);
 
-  const showChange = (e) => {
-    const favShow = e.target.value;
-    setValues({ ...values, show: favShow });
-  };
-
-  const descriptionChange = (e) => {
-    const des = e.target.value;
-    setValues({ ...values, description: des });
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = () => {
-    // console.log(values.description, values.show);
+    const newInfo = {
+      image: values.image,
+      show: values.show,
+      description: values.description,
+      id: values.id,
+    };
     setOpen(false);
-    // axios.post('')
+    axios.put('user/profile', { newInfo });
   };
 
   const classes = useStyles();
@@ -77,7 +91,7 @@ export default function Profile() {
       <CardActionArea>
         <CardMedia
           className={classes.media}
-          image="https://www.uoh.cl/assets/img/no_img.jpg"
+          image={values.image}
         />
         <CardContent>
           <Typography
@@ -129,7 +143,7 @@ export default function Profile() {
               label="current favorite show"
               type="text"
               fullWidth
-              onChange={showChange}
+              onChange={handleChange}
             />
             <TextField
               autoFocus
@@ -138,7 +152,7 @@ export default function Profile() {
               label="about me"
               type="text"
               fullWidth
-              onChange={descriptionChange}
+              onChange={handleChange}
             />
           </DialogContent>
           <DialogActions>

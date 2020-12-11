@@ -511,12 +511,14 @@ app.get('/likedPost/:id', (req, res) => {
   });
 });
 
-app.put('user/profile', (req, res) => {
-  console.warn(req.body);
-  // Users.findOneAndUpdate(
-  //   { id: req.cookies.ShowNTellId },
-  //   { },
-  // );
+app.put('/user/profile', (req, res) => {
+  Users.findOneAndUpdate(
+    { id: req.cookies.ShowNTellId },
+    { image: req.body.newInfo.image,
+      favShow: req.body.newInfo.show,
+      description: req.body.newInfo.description },
+  )
+    .then((data) => console.warn('success', data));
 });
 
 app.listen(3000, () => {
