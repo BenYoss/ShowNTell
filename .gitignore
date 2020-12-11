@@ -3,3 +3,4 @@ client/dist/bundle.js
 .env
 bower_components
 config/
+app.yaml
