@@ -3,7 +3,8 @@ const express = require('express');
 const passport = require('passport');
 const axios = require('axios');
 const cors = require('cors');
-const session = require('cookie-session');
+const session = require('express-session');
+const MemoryStore = require('session-memory-store')(session);
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 require('./db/index');
@@ -41,7 +42,9 @@ app.use(
     secret: process.env.CLIENT_SECRET,
     saveUninitialized: true,
     resave: false,
-    maxAge: 60000,
+    store: new MemoryStore({
+      expires: false,
+    }),
   }),
 );
 app.use(passport.initialize());
