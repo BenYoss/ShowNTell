@@ -1,8 +1,11 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable max-len */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './search.css';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, makeStyles, createMuiTheme } from '@material-ui/core/styles';
+import axios from 'axios';
 import Rating from '@material-ui/lab/Rating';
 import LiveTvIcon from '@material-ui/icons/LiveTv';
 import TextField from '@material-ui/core/TextField';
@@ -63,17 +66,37 @@ const useStyles = makeStyles({
     margin: theme.spacing(1),
   },
 });
-const SearchFeedEntry = ({ show }) => {
+const SearchFeedEntry = ({ show, onClick }) => {
   const [value, setValue] = useState(0);
   const [hover, setHover] = useState(-1);
   const classes = useStyles();
   const [state, setState] = useState('');
   const [showPopUp, setShowPopUp] = useState({});
   const [text, setText] = useState('');
+  const [comments, setComments] = useState([]);
+  const [showComments, setShowComments] = useState('');
 
+  const getRating = () => {
+    const theShows = comments.filter((comment) => comment.name === show.name);
+    axios.get('/user').then(({ data: { id } }) => {
+      const finalComment = theShows.length && theShows[0].rating.filter((comment) => comment.hasOwnProperty(id));
+      setValue(finalComment[0] ? finalComment[0][id] : 0);
+      return value;
+    });
+  };
   const handleChange = (event) => {
     setText(event.target.value);
   };
+
+  const getShows = async () => {
+    const { data } = await axios.get('/shows');
+    setComments(data);
+    console.log(data);
+  };
+  useEffect(() => {
+    getShows();
+    getRating();
+  }, []);
 
   const getSummary = () => {
     let summary = show.summary.replace(/<p>|<\/p>/g, '');
@@ -116,7 +139,7 @@ const SearchFeedEntry = ({ show }) => {
 
   return (
     <div className="show-card">
-      <div className="show-name" value={show.id}>
+      <div className="show-name">
         <div className="show-name">{show.name}</div>
         { show.rating && show.rating.average ? (
           <>
@@ -130,15 +153,14 @@ const SearchFeedEntry = ({ show }) => {
               icon={<LiveTvIcon fontSize="inherit" />}
             />
           </>
-
         ) : <Typography component="legend">Average Rating N/A</Typography> }
         <>
           <Typography component="legend">Your Rating</Typography>
           <div className={classes.root}>
             <Rating
               name={show.name}
-              defaultValue={0}
-              value={value}
+              value={getRating()}
+              readOnly={!!value}
               precision={0.5}
               onChange={(event, newValue) => {
                 setValue(newValue);
@@ -169,13 +191,21 @@ const SearchFeedEntry = ({ show }) => {
 
               />
               <br />
-              <Button onClick={() => setShowPopUp({})} variant="contained" color="primary" href="#contained-buttons">
+              <Button
+                onClick={async () => {
+                  setShowPopUp({}); const { data: { id } } = await axios.get('/user');
+                  await axios.put('/show', { idUser: id, idShow: show.id, comment: text, rating: value });
+                }}
+                variant="contained"
+                color="primary"
+                href="#contained-buttons"
+              >
                 Submit
               </Button>
             </div>
           </form>
         ) }
-        <img className="show-img" src={getImage()} alt="" />
+        <img className="show-img" src={getImage()} alt="" value={show.id} onClick={() => onClick(show)} />
         <img className="unavail-img" src={getPicUnavail()} alt="" />
         <button
           className="summary-button"
@@ -186,11 +216,22 @@ const SearchFeedEntry = ({ show }) => {
         >
           show summary
         </button>
-
         <div className="show-summary">
           {state}
         </div>
-
+        <button onClick={async () => {
+          const theShows = comments.filter((comment) => comment.name === show.name);
+          const { data: { id } } = await axios.get('/user');
+          const finalComment = theShows[0].comment.filter((comment) => comment.hasOwnProperty(id));
+          setShowComments(finalComment[0][id]);
+          getShows();
+        }}
+        >
+          Show comments
+        </button>
+        <div>
+          {showComments}
+        </div>
       </div>
     </div>
   );
