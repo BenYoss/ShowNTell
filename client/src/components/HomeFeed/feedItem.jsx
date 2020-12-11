@@ -1,7 +1,9 @@
+/* eslint-disable no-console */
 import React, { useState } from 'react';
 import axios from 'axios';
 import './homefeed.css';
-import { FaHeart, FaRegCommentDots, FaTimes } from 'react-icons/fa';
+import { FaHeart, FaRegCommentDots, FaTimes, FaGift } from 'react-icons/fa';
+import ReactGiphySearchbox from 'react-giphy-searchbox';
 import Reply from './reply.jsx';
 
 const FeedItem = ({ post, user = {}, setPosts }) => {
@@ -12,6 +14,7 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
   const [number, setNumber] = useState(currentPost.likes.length);
   const [box, setBox] = useState(false);
   const [content, setContent] = useState('');
+  const [gifView, setgifView] = useState(false);
   const getShow = () => {
     if (!show) {
       axios(`/postShow/${currentPost.show}`).then(({ data }) => {
@@ -66,6 +69,30 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
               className="comment-btn"
               onClick={() => setBox(true)}
             />
+          )}
+
+          {!gifView && (
+            <FaGift
+              className="gif-button"
+              onClick={() => setgifView(true)}
+            />
+          )}
+        </div>
+
+        <div className="post-comment-btn">
+          {gifView && (
+            <div className="comment-box">
+              <FaTimes
+                className="gif-x-btn"
+                onClick={() => {
+                  setgifView(false);
+                }}
+              />
+              <ReactGiphySearchbox
+                apiKey={process.env.GIPHY}
+                onSelect={(item) => console.info(item)}
+              />
+            </div>
           )}
         </div>
 
