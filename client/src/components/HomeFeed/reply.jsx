@@ -1,13 +1,14 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaHeart, FaRegCommentDots, FaTimes, FaGift } from 'react-icons/fa';
 import './homefeed.css';
 import ReactGiphySearchbox from 'react-giphy-searchbox';
-import GifSearch from './GifSearch';
 
 const Reply = ({ id, place, user, setPosts }) => {
   const [feed, setFeed] = useState();
   const [message, setMessage] = useState();
+  const [image, setImage] = useState('');
   const [name, setName] = useState();
   const [test, setTest] = useState();
   const [reply, setReply] = useState(false);
@@ -23,6 +24,7 @@ const Reply = ({ id, place, user, setPosts }) => {
         .then(({ data }) => {
           setFeed(data._id);
           setMessage(data.content);
+          setImage(data.image);
           setTest(data.user);
           setArray(data.comment);
           setCurrentLike(data.likes.includes(user.id));
@@ -39,9 +41,10 @@ const Reply = ({ id, place, user, setPosts }) => {
         }).catch();
     }
   };
+
   const gifPost = (gif) => {
     setgifView(false);
-    axios.post('/replys/gif', { url: gif.images.original.url, slug: gif.slug, feed })
+    axios.post('/replys/gif', { url: gif.images.original.url, feed })
       .then(({ data }) => {
         setArray(data.comment);
         axios
@@ -59,7 +62,7 @@ const Reply = ({ id, place, user, setPosts }) => {
         {getName()}
         <div className="comment-author">{name || null}</div>
         <h4 id="comment-content">{`${message}` || null}</h4>
-        <img src={message} alt="" />
+        <img src={`${image}` || null} alt="gif" />
         <div className="like-count">{number}</div>
         <FaHeart
           className={currentLike ? 'liked-button' : 'post-like-btn'}
@@ -138,14 +141,17 @@ const Reply = ({ id, place, user, setPosts }) => {
                   setgifView(false);
                 }}
               />
-              <ReactGiphySearchbox apiKey={process.env.GIPHY} onSelect={(item) => gifPost(item)} />
+              <ReactGiphySearchbox
+                apiKey={process.env.GIPHY}
+                onSelect={(item) => { gifPost(item); }}
+              />
             </div>
           )}
         </div>
 
       </div>
       <div style={{ left: `${place}px`, position: 'relative' }}>
-        {array.map((value, i) => {
+        {array.length && array.map((value, i) => {
           return (<Reply key={value + i} id={value} user={user} place={place + 75} />);
         })}
       </div>

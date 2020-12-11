@@ -438,9 +438,9 @@ app.post('/replys/gif', (req, res) => {
     userInfo = data;
     Replys.create({
       user: userInfo._id,
-      content: req.body.url,
       comment: [],
       likes: [],
+      image: req.body.url,
     }).then(({ _id }) => {
       Replys.findOne({ _id: req.body.feed }).then((data) => {
         Replys.updateOne(
