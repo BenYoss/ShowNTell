@@ -34,9 +34,14 @@ passport.deserializeUser((user, done) => {
 
 app.use(
   session({
+    cookie: {
+      secure: true,
+      maxAge: 60000,
+    },
     secret: process.env.CLIENT_SECRET,
-    saveUninitialized: false,
-    resave: true,
+    saveUninitialized: true,
+    resave: false,
+    maxAge: 60000,
   }),
 );
 app.use(passport.initialize());
