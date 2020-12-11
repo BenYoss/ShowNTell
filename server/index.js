@@ -193,6 +193,13 @@ app.get('/search/:query', (req, res) => {
     .catch();
 });
 
+app.put('/show', async (req, res) => {
+  const { idUser, idShow, rating, comment } = req.body;
+  const addRatingComment = await Shows.findOneAndUpdate({ id: idShow }, {
+    $addToSet: { rating: { [idUser]: rating }, comment: { [idUser]: comment } },
+  });
+});
+
 app.get('/show/:id', (req, res) => {
   Shows.find({ id: req.params.id })
     .then((record) => {
@@ -205,6 +212,8 @@ app.get('/show/:id', (req, res) => {
           name: data.name,
           posts: [],
           subscriberCount: 0,
+          rating: {},
+          comments: {},
         }))
         .then((result) => result)
         .catch();

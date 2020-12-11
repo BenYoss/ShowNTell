@@ -21,8 +21,8 @@ const showSchema = mongoose.Schema({
   id: Number,
   posts: Array,
   subscriberCount: Number,
-  rating: Number,
-  comment: String,
+  rating: Array,
+  comment: Array,
 });
 
 const Shows = mongoose.model('Shows', showSchema);
