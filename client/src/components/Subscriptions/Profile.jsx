@@ -22,6 +22,7 @@ const useStyles = makeStyles({
     top: '25%',
     marginRight: '-50px',
     marginLeft: '40px',
+    borderRadius: '20px',
   },
   media: {
     height: 550,
@@ -64,7 +65,7 @@ export default function Profile() {
   };
 
   const handleSubmit = () => {
-    // retrieve the data from the DialogContent
+    // console.log(values.description, values.show);
     setOpen(false);
     // axios.post('')
   };

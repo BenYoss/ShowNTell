@@ -479,14 +479,6 @@ app.get('/likedPost/:id', (req, res) => {
   });
 });
 
-app.put('user/profile', (req, res) => {
-  console.log(req.body);
-  // Users.findOneAndUpdate(
-  //   { id: req.cookies.ShowNTellId },
-  //   { }
-  //   )
-});
-
 app.listen(3000, () => {
   // eslint-disable-next-line no-console
   console.log('http://localhost:3000');
