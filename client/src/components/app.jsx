@@ -160,8 +160,6 @@ const App = () => {
         )}
       {getUser()}
 
-      {/* { getPosts()} */}
-
       {userClicked ? (
         <button onClick={handleShowFeed}>Show Home Feed</button>
       ) : null}
