@@ -198,7 +198,6 @@ app.put('/show', async (req, res) => {
   const addRatingComment = await Shows.findOneAndUpdate({ id: idShow }, {
     $addToSet: { rating: { [idUser]: rating }, comment: { [idUser]: comment } },
   });
-  console.warn(idUser, idShow, rating, comment);
 });
 
 app.get('/show/:id', (req, res) => {

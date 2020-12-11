@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import htmlParser from 'react-html-parser';
 import './homefeed.css';
 import { FaHeart, FaRegCommentDots, FaTimes } from 'react-icons/fa';
 import Reply from './reply.jsx';
@@ -43,7 +44,11 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
         <h2 className="post-show">{`${show}`}</h2>
         <div id="post-show-title">{`${currentPost.title}`}</div>
         <h4 className="post-author">{`${name}`}</h4>
-        <div id="post-content">{currentPost.content}</div>
+        <div id="post-content">
+          {
+        currentPost.content.includes('</p>') ? (htmlParser(currentPost.content)) : currentPost.content
+        }
+        </div>
         <div className="post-btn-container">
           <div className="like-count">{number}</div>
           <FaHeart

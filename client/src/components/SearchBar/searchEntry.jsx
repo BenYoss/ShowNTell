@@ -191,6 +191,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
 
               />
               <br />
+
               <Button
                 onClick={async () => {
                   setShowPopUp({}); const { data: { id } } = await axios.get('/user');
@@ -200,6 +201,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
                 color="primary"
                 href="#contained-buttons"
               >
+
                 Submit
               </Button>
             </div>
