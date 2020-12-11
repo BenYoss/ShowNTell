@@ -30,7 +30,6 @@ const App = () => {
   const [test, setTest] = useState(false);
 
   const changeView = (newView) => {
-    console.warn(process.env.CLIENT_ID);
     setView(newView);
   };
 
@@ -160,7 +159,7 @@ const App = () => {
           </a>
         )}
       {getUser()}
-      {/* {getPosts()} */}
+
       {userClicked ? (
         <button onClick={handleShowFeed}>Show Home Feed</button>
       ) : null}
