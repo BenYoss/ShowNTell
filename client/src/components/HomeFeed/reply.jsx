@@ -58,7 +58,7 @@ const Reply = ({ id, place, user, setPosts }) => {
         {getFeed()}
         {getName()}
         <div className="comment-author">{name || null}</div>
-        <h4 id="comment-content">{`${message}hi` || null}</h4>
+        <h4 id="comment-content">{`${message}` || null}</h4>
         <img src={message} alt="" />
         <div className="like-count">{number}</div>
         <FaHeart
