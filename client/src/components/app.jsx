@@ -18,6 +18,8 @@ import SearchFeed from './SearchBar/searchFeed.jsx';
 import ShowFeed from './Subscriptions/showFeed.jsx';
 import './app.css';
 
+require('regenerator-runtime');
+
 const App = () => {
   const [posts, setPosts] = useState();
   const [user, setUser] = useState();

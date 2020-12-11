@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import './search.css';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, makeStyles, createMuiTheme } from '@material-ui/core/styles';
+import axios from 'axios';
 import Rating from '@material-ui/lab/Rating';
 import LiveTvIcon from '@material-ui/icons/LiveTv';
 import TextField from '@material-ui/core/TextField';
@@ -63,7 +64,7 @@ const useStyles = makeStyles({
     margin: theme.spacing(1),
   },
 });
-const SearchFeedEntry = ({ show }) => {
+const SearchFeedEntry = ({ show, onClick }) => {
   const [value, setValue] = useState(0);
   const [hover, setHover] = useState(-1);
   const classes = useStyles();
@@ -116,7 +117,7 @@ const SearchFeedEntry = ({ show }) => {
 
   return (
     <div className="show-card">
-      <div className="show-name" value={show.id}>
+      <div className="show-name">
         <div className="show-name">{show.name}</div>
         { show.rating && show.rating.average ? (
           <>
@@ -169,13 +170,13 @@ const SearchFeedEntry = ({ show }) => {
 
               />
               <br />
-              <Button onClick={() => setShowPopUp({})} variant="contained" color="primary" href="#contained-buttons">
+              <Button onClick={async () => { setShowPopUp({}); const { data: { id } } = await axios.get('/user'); console.warn('THIS IS ID', id); await axios.put('/show', { idUser: id, idShow: show.id, comment: text, rating: value }); }} variant="contained" color="primary" href="#contained-buttons">
                 Submit
               </Button>
             </div>
           </form>
         ) }
-        <img className="show-img" src={getImage()} alt="" />
+        <img className="show-img" src={getImage()} alt="" value={show.id} onClick={() => onClick(show)} />
         <img className="unavail-img" src={getPicUnavail()} alt="" />
         <button
           className="summary-button"
