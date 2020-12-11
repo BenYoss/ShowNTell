@@ -3,7 +3,7 @@ const express = require('express');
 const passport = require('passport');
 const axios = require('axios');
 const cors = require('cors');
-const session = require('express-session');
+const session = require('cookie-session');
 const cookieParser = require('cookie-parser');
 require('dotenv').config();
 require('./db/index');
