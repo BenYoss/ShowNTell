@@ -91,7 +91,6 @@ const SearchFeedEntry = ({ show, onClick }) => {
   const getShows = async () => {
     const { data } = await axios.get('/shows');
     setComments(data);
-    console.log(data);
   };
   useEffect(() => {
     getShows();
