@@ -136,6 +136,19 @@ const SearchFeedEntry = ({ show, onClick }) => {
       return noImgAvail;
     }
   };
+  
+    const commentClick = async () => {
+    const theShows = comments.filter((comment) => comment.name === show.name);
+    const { data: { id } } = await axios.get('/user');
+    const finalComment = theShows[0].comment.filter((comment) => comment.hasOwnProperty(id));
+    setShowComments(finalComment[0][id]);
+    getShows();
+  };
+
+  const handleClick = async () => {
+    setShowPopUp({}); const { data: { id } } = await axios.get('/user');
+    await axios.put('/show', { idUser: id, idShow: show.id, comment: text, rating: value });
+  };
 
   return (
     <div className="show-card">
@@ -193,10 +206,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
               <br />
 
               <Button
-                onClick={async () => {
-                  setShowPopUp({}); const { data: { id } } = await axios.get('/user');
-                  await axios.put('/show', { idUser: id, idShow: show.id, comment: text, rating: value });
-                }}
+                onClick={handleClick}
                 variant="contained"
                 color="primary"
                 href="#contained-buttons"
@@ -221,13 +231,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
         <div className="show-summary">
           {state}
         </div>
-        <button onClick={async () => {
-          const theShows = comments.filter((comment) => comment.name === show.name);
-          const { data: { id } } = await axios.get('/user');
-          const finalComment = theShows[0].comment.filter((comment) => comment.hasOwnProperty(id));
-          setShowComments(finalComment[0][id]);
-          getShows();
-        }}
+        <button onClick={commentClick}
         >
           Show comments
         </button>
