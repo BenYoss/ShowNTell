@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaHeart, FaRegCommentDots, FaTimes } from 'react-icons/fa';
+import { FaHeart, FaRegCommentDots, FaTimes, FaGift } from 'react-icons/fa';
 import './homefeed.css';
+import ReactGiphySearchbox from 'react-giphy-searchbox';
+import GifSearch from './GifSearch';
 
 const Reply = ({ id, place, user, setPosts }) => {
   const [feed, setFeed] = useState();
@@ -13,6 +15,7 @@ const Reply = ({ id, place, user, setPosts }) => {
   const [array, setArray] = useState([]);
   const [currentLike, setCurrentLike] = useState();
   const [number, setNumber] = useState('');
+  const [gifView, setgifView] = useState(false);
 
   const getFeed = () => {
     if (!feed) {
@@ -36,6 +39,18 @@ const Reply = ({ id, place, user, setPosts }) => {
         }).catch();
     }
   };
+  const gifPost = (gif) => {
+    setgifView(false);
+    axios.post('/replys/gif', { url: gif.images.original.url, slug: gif.slug, feed })
+      .then(({ data }) => {
+        setArray(data.comment);
+        axios
+          .get('/posts')
+          .then((result) => {
+            setPosts(result.data);
+          });
+      });
+  };
 
   return (
     <div>
@@ -43,7 +58,8 @@ const Reply = ({ id, place, user, setPosts }) => {
         {getFeed()}
         {getName()}
         <div className="comment-author">{name || null}</div>
-        <h4 id="comment-content">{message || null}</h4>
+        <h4 id="comment-content">{`${message}` || null}</h4>
+        <img src={message} alt="" />
         <div className="like-count">{number}</div>
         <FaHeart
           className={currentLike ? 'liked-button' : 'post-like-btn'}
@@ -105,7 +121,28 @@ const Reply = ({ id, place, user, setPosts }) => {
             </div>
           ) : <FaRegCommentDots className="post-comment-btn" onClick={() => setReply(true)} />
         }
+          {!gifView && (
+            <FaGift
+              className="gif-button-2"
+              onClick={() => setgifView(true)}
+            />
+          )}
         </div>
+
+        <div className="post-comment-btn">
+          {gifView && (
+            <div className="comment-box">
+              <FaTimes
+                className="gif-x-btn"
+                onClick={() => {
+                  setgifView(false);
+                }}
+              />
+              <ReactGiphySearchbox apiKey={process.env.GIPHY} onSelect={(item) => gifPost(item)} />
+            </div>
+          )}
+        </div>
+
       </div>
       <div style={{ left: `${place}px`, position: 'relative' }}>
         {array.map((value, i) => {

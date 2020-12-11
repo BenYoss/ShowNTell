@@ -1,5 +1,7 @@
+/* eslint-disable no-prototype-builtins */
+/* eslint-disable jsx-a11y/control-has-associated-label */
 /* eslint-disable max-len */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './search.css';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, makeStyles, createMuiTheme } from '@material-ui/core/styles';
@@ -71,10 +73,29 @@ const SearchFeedEntry = ({ show, onClick }) => {
   const [state, setState] = useState('');
   const [showPopUp, setShowPopUp] = useState({});
   const [text, setText] = useState('');
+  const [comments, setComments] = useState([]);
+  const [showComments, setShowComments] = useState('');
 
+  const getRating = () => {
+    const theShows = comments.filter((comment) => comment.name === show.name);
+    axios.get('/user').then(({ data: { id } }) => {
+      const finalComment = theShows.length && theShows[0].rating.filter((comment) => comment.hasOwnProperty(id));
+      setValue(finalComment[0] ? finalComment[0][id] : 0);
+      return value;
+    });
+  };
   const handleChange = (event) => {
     setText(event.target.value);
   };
+
+  const getShows = async () => {
+    const { data } = await axios.get('/shows');
+    setComments(data);
+  };
+  useEffect(() => {
+    getShows();
+    getRating();
+  }, []);
 
   const getSummary = () => {
     let summary = show.summary.replace(/<p>|<\/p>/g, '');
@@ -114,6 +135,19 @@ const SearchFeedEntry = ({ show, onClick }) => {
       return noImgAvail;
     }
   };
+  
+    const commentClick = async () => {
+    const theShows = comments.filter((comment) => comment.name === show.name);
+    const { data: { id } } = await axios.get('/user');
+    const finalComment = theShows[0].comment.filter((comment) => comment.hasOwnProperty(id));
+    setShowComments(finalComment[0][id]);
+    getShows();
+  };
+
+  const handleClick = async () => {
+    setShowPopUp({}); const { data: { id } } = await axios.get('/user');
+    await axios.put('/show', { idUser: id, idShow: show.id, comment: text, rating: value });
+  };
 
   return (
     <div className="show-card">
@@ -131,15 +165,14 @@ const SearchFeedEntry = ({ show, onClick }) => {
               icon={<LiveTvIcon fontSize="inherit" />}
             />
           </>
-
         ) : <Typography component="legend">Average Rating N/A</Typography> }
         <>
           <Typography component="legend">Your Rating</Typography>
           <div className={classes.root}>
             <Rating
               name={show.name}
-              defaultValue={0}
-              value={value}
+              value={getRating()}
+              readOnly={!!value}
               precision={0.5}
               onChange={(event, newValue) => {
                 setValue(newValue);
@@ -170,7 +203,14 @@ const SearchFeedEntry = ({ show, onClick }) => {
 
               />
               <br />
-              <Button onClick={async () => { setShowPopUp({}); const { data: { id } } = await axios.get('/user'); console.warn('THIS IS ID', id); await axios.put('/show', { idUser: id, idShow: show.id, comment: text, rating: value }); }} variant="contained" color="primary" href="#contained-buttons">
+
+              <Button
+                onClick={handleClick}
+                variant="contained"
+                color="primary"
+                href="#contained-buttons"
+              >
+
                 Submit
               </Button>
             </div>
@@ -187,11 +227,16 @@ const SearchFeedEntry = ({ show, onClick }) => {
         >
           show summary
         </button>
-
         <div className="show-summary">
           {state}
         </div>
-
+        <button onClick={commentClick}
+        >
+          Show comments
+        </button>
+        <div>
+          {showComments}
+        </div>
       </div>
     </div>
   );
