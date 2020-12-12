@@ -196,3 +196,41 @@
 .x-btn:hover{
   color:#dd3e42;
 }
+
+.gif-button{
+  font-size: 24px;
+  color: #f0ccb3;
+  padding-left: 12px;
+  padding-bottom: 2px;
+}
+
+.post-gif-btn{
+  font-size: 24px;
+  color: #f0ccb3;
+  margin-left: 26%;
+  position: relative;
+  bottom: 25px;
+  padding-top: 25px;
+}
+
+.gif-x-btn{
+  position: relative;
+  color: white;
+  font-size: 16px;
+  top: 4px;
+  padding-top: 25px;
+  padding-right: 5px;
+  padding-bottom: 10px;
+}
+
+.gif-x-btn:hover{
+  color:#dd3e42;
+}
+
+.gif-button-2{
+  font-size: 24px;
+  color: #f0ccb3;
+  padding-left: 12px;
+  padding-bottom: 2px;
+  display: inline-block;
+}

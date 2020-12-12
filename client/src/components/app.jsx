@@ -18,6 +18,8 @@ import SearchFeed from './SearchBar/searchFeed.jsx';
 import ShowFeed from './Subscriptions/showFeed.jsx';
 import './app.css';
 
+require('regenerator-runtime');
+
 const App = () => {
   const [posts, setPosts] = useState();
   const [user, setUser] = useState();
@@ -28,7 +30,6 @@ const App = () => {
   const [test, setTest] = useState(false);
 
   const changeView = (newView) => {
-    console.warn(process.env.CLIENT_ID);
     setView(newView);
   };
 
@@ -158,7 +159,7 @@ const App = () => {
           </a>
         )}
       {getUser()}
-      {/* {getPosts()} */}
+
       {userClicked ? (
         <button onClick={handleShowFeed}>Show Home Feed</button>
       ) : null}

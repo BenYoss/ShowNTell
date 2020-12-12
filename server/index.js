@@ -201,6 +201,13 @@ app.get('/search/:query', (req, res) => {
     .catch();
 });
 
+app.put('/show', async (req, res) => {
+  const { idUser, idShow, rating, comment } = req.body;
+  const addRatingComment = await Shows.findOneAndUpdate({ id: idShow }, {
+    $addToSet: { rating: { [idUser]: rating }, comment: { [idUser]: comment } },
+  });
+});
+
 app.get('/show/:id', (req, res) => {
   Shows.find({ id: req.params.id })
     .then((record) => {
@@ -213,6 +220,8 @@ app.get('/show/:id', (req, res) => {
           name: data.name,
           posts: [],
           subscriberCount: 0,
+          rating: {},
+          comments: {},
         }))
         .then((result) => result)
         .catch();
@@ -432,6 +441,29 @@ app.get('/replys/:id/:content', (req, res) => {
   });
 });
 
+app.post('/replys/gif', (req, res) => {
+  Users.findOne({ id: req.cookies.ShowNTellId }).then((data) => {
+    userInfo = data;
+    Replys.create({
+      user: userInfo._id,
+      content: req.body.url,
+      comment: [],
+      likes: [],
+    }).then(({ _id }) => {
+      Replys.findOne({ _id: req.body.feed }).then((data) => {
+        Replys.updateOne(
+          { _id: req.body.feed },
+          { comment: [...data.comment, _id] },
+        )
+          .then(() => Replys.findOne({ _id: req.body.feed }))
+          .then((result) => {
+            res.json(result);
+          });
+      });
+    });
+  });
+});
+
 app.get('/feeds/:id', (req, res) => {
   Replys.findOne({ _id: req.params.id }).then((data) => res.json(data));
 });
@@ -485,6 +517,16 @@ app.get('/likedPost/:id', (req, res) => {
       }
     });
   });
+});
+
+app.put('/user/profile', (req, res) => {
+  Users.findOneAndUpdate(
+    { id: req.cookies.ShowNTellId },
+    { image: req.body.newInfo.image,
+      favShow: req.body.newInfo.show,
+      description: req.body.newInfo.description },
+  )
+    .then((data) => console.warn('success', data));
 });
 
 app.listen(3000, () => {

@@ -1,6 +1,7 @@
 node_modules/
 client/dist/bundle.js
 .env
+app.yaml
 bower_components
 config/
 app.yaml
