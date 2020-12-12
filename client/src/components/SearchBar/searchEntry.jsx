@@ -81,8 +81,8 @@ const SearchFeedEntry = ({ show, onClick }) => {
     axios.get('/user').then(({ data: { id } }) => {
       const finalComment = theShows.length && theShows[0].rating.filter((comment) => comment.hasOwnProperty(id));
       setValue(finalComment[0] ? finalComment[0][id] : 0);
-      return value;
     });
+    return value;
   };
   const handleChange = (event) => {
     setText(event.target.value);
@@ -135,8 +135,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
       return noImgAvail;
     }
   };
-  
-    const commentClick = async () => {
+  const commentClick = async () => {
     const theShows = comments.filter((comment) => comment.name === show.name);
     const { data: { id } } = await axios.get('/user');
     const finalComment = theShows[0].comment.filter((comment) => comment.hasOwnProperty(id));
@@ -230,8 +229,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
         <div className="show-summary">
           {state}
         </div>
-        <button onClick={commentClick}
-        >
+        <button onClick={commentClick}>
           Show comments
         </button>
         <div>
