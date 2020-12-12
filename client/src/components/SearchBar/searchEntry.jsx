@@ -130,13 +130,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
     }
   };
 
-  const getPicUnavail = () => {
-    if (show.image === null) {
-      return noImgAvail;
-    }
-  };
-  
-    const commentClick = async () => {
+  const commentClick = async () => {
     const theShows = comments.filter((comment) => comment.name === show.name);
     const { data: { id } } = await axios.get('/user');
     const finalComment = theShows[0].comment.filter((comment) => comment.hasOwnProperty(id));
@@ -147,6 +141,12 @@ const SearchFeedEntry = ({ show, onClick }) => {
   const handleClick = async () => {
     setShowPopUp({}); const { data: { id } } = await axios.get('/user');
     await axios.put('/show', { idUser: id, idShow: show.id, comment: text, rating: value });
+  };
+
+  const getPicUnavail = () => {
+    if (show.image === null) {
+      return noImgAvail;
+    }
   };
 
   return (
@@ -230,8 +230,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
         <div className="show-summary">
           {state}
         </div>
-        <button onClick={commentClick}
-        >
+        <button onClick={commentClick}>
           Show comments
         </button>
         <div>
