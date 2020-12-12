@@ -81,8 +81,8 @@ const SearchFeedEntry = ({ show, onClick }) => {
     axios.get('/user').then(({ data: { id } }) => {
       const finalComment = theShows.length && theShows[0].rating.filter((comment) => comment.hasOwnProperty(id));
       setValue(finalComment[0] ? finalComment[0][id] : 0);
-      return value;
     });
+    return value;
   };
   const handleChange = (event) => {
     setText(event.target.value);
@@ -93,8 +93,8 @@ const SearchFeedEntry = ({ show, onClick }) => {
     setComments(data);
   };
   useEffect(() => {
-    getShows();
     getRating();
+    getShows();
   }, []);
 
   const getSummary = () => {
@@ -130,13 +130,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
     }
   };
 
-  const getPicUnavail = () => {
-    if (show.image === null) {
-      return noImgAvail;
-    }
-  };
-  
-    const commentClick = async () => {
+  const commentClick = async () => {
     const theShows = comments.filter((comment) => comment.name === show.name);
     const { data: { id } } = await axios.get('/user');
     const finalComment = theShows[0].comment.filter((comment) => comment.hasOwnProperty(id));
@@ -145,8 +139,15 @@ const SearchFeedEntry = ({ show, onClick }) => {
   };
 
   const handleClick = async () => {
-    setShowPopUp({}); const { data: { id } } = await axios.get('/user');
+    setShowPopUp({});
+    const { data: { id } } = await axios.get('/user');
     await axios.put('/show', { idUser: id, idShow: show.id, comment: text, rating: value });
+  };
+
+  const getPicUnavail = () => {
+    if (show.image === null) {
+      return noImgAvail;
+    }
   };
 
   return (
@@ -171,6 +172,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
           <div className={classes.root}>
             <Rating
               name={show.name}
+              defaultValue={value}
               value={getRating()}
               readOnly={!!value}
               precision={0.5}
@@ -230,8 +232,7 @@ const SearchFeedEntry = ({ show, onClick }) => {
         <div className="show-summary">
           {state}
         </div>
-        <button onClick={commentClick}
-        >
+        <button onClick={commentClick}>
           Show comments
         </button>
         <div>
