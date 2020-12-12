@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaHeart, FaRegCommentDots, FaTimes, FaGift } from 'react-icons/fa';
@@ -7,6 +8,7 @@ import ReactGiphySearchbox from 'react-giphy-searchbox';
 const Reply = ({ id, place, user, setPosts }) => {
   const [feed, setFeed] = useState();
   const [message, setMessage] = useState();
+  const [image, setImage] = useState('');
   const [name, setName] = useState();
   const [test, setTest] = useState();
   const [reply, setReply] = useState(false);
@@ -22,6 +24,7 @@ const Reply = ({ id, place, user, setPosts }) => {
         .then(({ data }) => {
           setFeed(data._id);
           setMessage(data.content);
+          setImage(data.image);
           setTest(data.user);
           setArray(data.comment);
           setCurrentLike(data.likes.includes(user.id));
@@ -38,9 +41,10 @@ const Reply = ({ id, place, user, setPosts }) => {
         }).catch();
     }
   };
+
   const gifPost = (gif) => {
     setgifView(false);
-    axios.post('/replys/gif', { url: gif.images.original.url, slug: gif.slug, feed })
+    axios.post('/replys/gif', { url: gif.images.original.url, feed })
       .then(({ data }) => {
         setArray(data.comment);
         axios
@@ -57,43 +61,40 @@ const Reply = ({ id, place, user, setPosts }) => {
         {getFeed()}
         {getName()}
         <div className="comment-author">{name || null}</div>
-        <small id="comment-content">{`${message}` || null}</small>
         <br />
-        <img src={message} alt="" />
-        <div className="like-count">{number}</div>
-        <FaHeart
-          className={currentLike ? 'liked-button' : 'post-like-btn'}
-          onClick={() => {
-            axios.get(`/likedPost/${id}`)
-              .then(() => {
-                if (currentLike) {
-                  setNumber(number - 1);
-                } else {
-                  setNumber(number + 1);
-                }
-                setCurrentLike(!currentLike);
-                axios
-                  .get('/posts')
-                  .then((result) => {
-                    setPosts(result.data);
+        <h4 id="comment-content">{`${message}` || ''}</h4>
+        <br />
+        <img src={`${image}` || null} alt="gif" className="gif" />
+        <br />
+        <div className="icon-container">
+          <span>
+            {`${number}  `}
+            <FaHeart
+              className={currentLike ? 'liked-button' : 'post-like-btn'}
+              onClick={() => {
+                axios.get(`/likedPost/${id}`)
+                  .then(() => {
+                    if (currentLike) {
+                      setNumber(number - 1);
+                    } else {
+                      setNumber(number + 1);
+                    }
+                    setCurrentLike(!currentLike);
+                    axios
+                      .get('/posts')
+                      .then((result) => {
+                        setPosts(result.data);
+                      });
                   });
-              });
-          }}
-        >
-          {currentLike ? 'unlike' : 'like'}
-        </FaHeart>
-        <div>
-          {
+              }}
+            >
+              {currentLike ? 'unlike' : 'like'}
+            </FaHeart>
+          </span>
+          <span>
+            {
           reply ? (
             <div className="comment-box">
-              <input
-                className="reply-comment-txt-box"
-                placeholder="what are your thoughts?"
-                value={content}
-                onChange={(e) => {
-                  setContent(e.target.value);
-                }}
-              />
               <button
                 className="submit-reply-comment-btn"
                 onClick={() => {
@@ -112,6 +113,14 @@ const Reply = ({ id, place, user, setPosts }) => {
               >
                 submit
               </button>
+              <input
+                className="reply-comment-txt-box"
+                placeholder="what are your thoughts?"
+                value={content}
+                onChange={(e) => {
+                  setContent(e.target.value);
+                }}
+              />
               <FaTimes
                 className="x-btn"
                 onClick={() => {
@@ -121,31 +130,36 @@ const Reply = ({ id, place, user, setPosts }) => {
             </div>
           ) : <FaRegCommentDots className="post-comment-btn" onClick={() => setReply(true)} />
         }
-          {!gifView && (
+          </span>
+          <span>
+            {!gifView && (
             <FaGift
               className="gif-button-2"
               onClick={() => setgifView(true)}
             />
-          )}
-        </div>
+            )}
 
-        <div className="post-comment-btn">
-          {gifView && (
-            <div className="comment-box">
-              <FaTimes
-                className="gif-x-btn"
-                onClick={() => {
-                  setgifView(false);
-                }}
-              />
-              <ReactGiphySearchbox apiKey={process.env.GIPHY} onSelect={(item) => gifPost(item)} />
+            <div className="post-comment-btn">
+              {gifView && (
+              <div className="comment-box">
+                <FaTimes
+                  className="gif-x-btn"
+                  onClick={() => {
+                    setgifView(false);
+                  }}
+                />
+                <ReactGiphySearchbox
+                  apiKey={process.env.GIPHY}
+                  onSelect={(item) => { gifPost(item); }}
+                />
+              </div>
+              )}
             </div>
-          )}
+          </span>
         </div>
-
       </div>
       <div style={{ left: `${place}px`, position: 'relative' }}>
-        {array.map((value, i) => {
+        {array.length && array.map((value, i) => {
           return (<Reply key={value + i} id={value} user={user} place={place + 75} />);
         })}
       </div>
