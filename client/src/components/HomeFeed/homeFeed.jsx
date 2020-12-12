@@ -11,8 +11,6 @@ const HomeFeed = ({ posts, handleUserClick, user, setPosts }) => {
   const [selectPost, setSelectPost] = useState(null);
   const [isOpen, setisOpen] = useState(false);
 
-  const color = '#140e3e';
-
   const useStyles = makeStyles((theme) => ({
     hide: {
       display: 'none',
@@ -27,27 +25,11 @@ const HomeFeed = ({ posts, handleUserClick, user, setPosts }) => {
       width: '100%',
       backgroundColor: '#140e3e',
       whiteSpace: 'nowrap',
-      // transition: theme.transitions.create('width', {
-      //   easing: theme.transitions.easing.sharp,
-      //   duration: theme.transitions.duration.enteringScreen,
-      // }),
     },
     Feed: {
       padding: '20px',
     },
   }));
-
-  const theme = createMuiTheme({
-    props: {
-      MuiSwipeableDrawer: {
-        paper: {
-          width: '100%',
-          backgroundColor: '#140e3e',
-          whiteSpace: 'nowrap',
-        },
-      },
-    },
-  });
 
   const classes = useStyles();
 
@@ -92,7 +74,6 @@ const HomeFeed = ({ posts, handleUserClick, user, setPosts }) => {
               [classes.drawerOpen]: isOpen,
             }),
           }}
-          color={color}
           open={isOpen}
           onClose={() => { setisOpen(false); }}
         >
