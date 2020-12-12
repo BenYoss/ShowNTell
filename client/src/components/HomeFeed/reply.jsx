@@ -61,42 +61,40 @@ const Reply = ({ id, place, user, setPosts }) => {
         {getFeed()}
         {getName()}
         <div className="comment-author">{name || null}</div>
-        <h4 id="comment-content">{`${message}` || null}</h4>
-        <img src={`${image}` || null} alt="gif" />
-        <div className="like-count">{number}</div>
-        <FaHeart
-          className={currentLike ? 'liked-button' : 'post-like-btn'}
-          onClick={() => {
-            axios.get(`/likedPost/${id}`)
-              .then(() => {
-                if (currentLike) {
-                  setNumber(number - 1);
-                } else {
-                  setNumber(number + 1);
-                }
-                setCurrentLike(!currentLike);
-                axios
-                  .get('/posts')
-                  .then((result) => {
-                    setPosts(result.data);
+        <br />
+        <h4 id="comment-content">{`${message}` || ''}</h4>
+        <br />
+        <img src={`${image}` || null} alt="gif" className="gif" />
+        <br />
+        <div className="icon-container">
+          <span>
+            {`${number}  `}
+            <FaHeart
+              className={currentLike ? 'liked-button' : 'post-like-btn'}
+              onClick={() => {
+                axios.get(`/likedPost/${id}`)
+                  .then(() => {
+                    if (currentLike) {
+                      setNumber(number - 1);
+                    } else {
+                      setNumber(number + 1);
+                    }
+                    setCurrentLike(!currentLike);
+                    axios
+                      .get('/posts')
+                      .then((result) => {
+                        setPosts(result.data);
+                      });
                   });
-              });
-          }}
-        >
-          {currentLike ? 'unlike' : 'like'}
-        </FaHeart>
-        <div>
-          {
+              }}
+            >
+              {currentLike ? 'unlike' : 'like'}
+            </FaHeart>
+          </span>
+          <span>
+            {
           reply ? (
             <div className="comment-box">
-              <input
-                className="reply-comment-txt-box"
-                placeholder="what are your thoughts?"
-                value={content}
-                onChange={(e) => {
-                  setContent(e.target.value);
-                }}
-              />
               <button
                 className="submit-reply-comment-btn"
                 onClick={() => {
@@ -115,6 +113,14 @@ const Reply = ({ id, place, user, setPosts }) => {
               >
                 submit
               </button>
+              <input
+                className="reply-comment-txt-box"
+                placeholder="what are your thoughts?"
+                value={content}
+                onChange={(e) => {
+                  setContent(e.target.value);
+                }}
+              />
               <FaTimes
                 className="x-btn"
                 onClick={() => {
@@ -124,31 +130,33 @@ const Reply = ({ id, place, user, setPosts }) => {
             </div>
           ) : <FaRegCommentDots className="post-comment-btn" onClick={() => setReply(true)} />
         }
-          {!gifView && (
+          </span>
+          <span>
+            {!gifView && (
             <FaGift
               className="gif-button-2"
               onClick={() => setgifView(true)}
             />
-          )}
-        </div>
+            )}
 
-        <div className="post-comment-btn">
-          {gifView && (
-            <div className="comment-box">
-              <FaTimes
-                className="gif-x-btn"
-                onClick={() => {
-                  setgifView(false);
-                }}
-              />
-              <ReactGiphySearchbox
-                apiKey={process.env.GIPHY}
-                onSelect={(item) => { gifPost(item); }}
-              />
+            <div className="post-comment-btn">
+              {gifView && (
+              <div className="comment-box">
+                <FaTimes
+                  className="gif-x-btn"
+                  onClick={() => {
+                    setgifView(false);
+                  }}
+                />
+                <ReactGiphySearchbox
+                  apiKey={process.env.GIPHY}
+                  onSelect={(item) => { gifPost(item); }}
+                />
+              </div>
+              )}
             </div>
-          )}
+          </span>
         </div>
-
       </div>
       <div style={{ left: `${place}px`, position: 'relative' }}>
         {array.length && array.map((value, i) => {
