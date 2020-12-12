@@ -42,9 +42,6 @@ app.use(
     secret: process.env.CLIENT_SECRET,
     saveUninitialized: true,
     resave: false,
-    store: new MemoryStore({
-      expires: false,
-    }),
   }),
 );
 app.use(passport.initialize());
