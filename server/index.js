@@ -41,7 +41,6 @@ app.use(
     secret: process.env.CLIENT_SECRET,
     saveUninitialized: true,
     resave: false,
-    maxAge: 60000,
   }),
 );
 app.use(passport.initialize());
