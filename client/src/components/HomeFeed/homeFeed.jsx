@@ -1,47 +1,116 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
-import Drawer from '@material-ui/core/Drawer';
+import { createMuiTheme, makeStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import Button from '@material-ui/core/Button';
 import FeedItem from './feedItem.jsx';
 
 import './homefeed.css';
 
 const HomeFeed = ({ posts, handleUserClick, user, setPosts }) => {
-  const [selectPost, setSelectPost] = useState('');
+  const [selectPost, setSelectPost] = useState(null);
+  const [isOpen, setisOpen] = useState(false);
+
+  const color = '#140e3e';
 
   const useStyles = makeStyles((theme) => ({
     hide: {
       display: 'none',
     },
     drawer: {
-      width: 1000,
+      width: 200,
       flexShrink: 0,
+      backgroundColor: '#140e3e',
       whiteSpace: 'nowrap',
     },
     drawerOpen: {
-      width: 1000,
-      transition: theme.transitions.create('width', {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
+      width: '100%',
+      backgroundColor: '#140e3e',
+      whiteSpace: 'nowrap',
+      // transition: theme.transitions.create('width', {
+      //   easing: theme.transitions.easing.sharp,
+      //   duration: theme.transitions.duration.enteringScreen,
+      // }),
+    },
+    Feed: {
+      padding: '20px',
     },
   }));
+
+  const theme = createMuiTheme({
+    props: {
+      MuiSwipeableDrawer: {
+        paper: {
+          width: '100%',
+          backgroundColor: '#140e3e',
+          whiteSpace: 'nowrap',
+        },
+      },
+    },
+  });
+
+  const classes = useStyles();
 
   return (
     <div>
       <div className="home-title"> Home feed</div>
       <div className="home-feed-container">
         {posts
-          ? posts.map((post, i) => (
-            <FeedItem
-              handleUserClick={handleUserClick}
-              post={post}
-              setPosts={setPosts}
-              key={post + i}
-              user={user}
-            />
-          ))
+          ? posts.map((post, i) => {
+            return (
+              <div>
+                <FeedItem
+                  handleUserClick={handleUserClick}
+                  post={post}
+                  setPosts={setPosts}
+                  key={post + i}
+                  user={user}
+                  isDrawer={false}
+                />
+                <Button
+                  style={{ backgroundColor: '#1d3b61', color: 'white' }}
+                  onClick={() => {
+                    setisOpen(true);
+                    setSelectPost(post);
+                  }}
+                >
+                  View Replies
+                </Button>
+              </div>
+            );
+          })
           : null}
+      </div>
+      <div className="drawer-container">
+        <SwipeableDrawer
+          anchor="right"
+          className={clsx(classes.drawer, {
+            [classes.drawerOpen]: isOpen,
+          })}
+          classes={{
+            paper: clsx({
+              [classes.drawerOpen]: isOpen,
+            }),
+          }}
+          color={color}
+          open={isOpen}
+          onClose={() => { setisOpen(false); }}
+        >
+          {
+            selectPost && (
+              <div>
+                <FeedItem
+                  handleUserClick={handleUserClick}
+                  post={selectPost}
+                  setPosts={setPosts}
+                  key={Math.random()}
+                  user={user}
+                  isDrawer
+                />
+              </div>
+            )
+          }
+        </SwipeableDrawer>
       </div>
     </div>
   );

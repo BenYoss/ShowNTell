@@ -3,7 +3,6 @@ import axios from 'axios';
 import { FaHeart, FaRegCommentDots, FaTimes, FaGift } from 'react-icons/fa';
 import './homefeed.css';
 import ReactGiphySearchbox from 'react-giphy-searchbox';
-import GifSearch from './GifSearch';
 
 const Reply = ({ id, place, user, setPosts }) => {
   const [feed, setFeed] = useState();
@@ -58,7 +57,8 @@ const Reply = ({ id, place, user, setPosts }) => {
         {getFeed()}
         {getName()}
         <div className="comment-author">{name || null}</div>
-        <h4 id="comment-content">{`${message}` || null}</h4>
+        <small id="comment-content">{`${message}` || null}</small>
+        <br />
         <img src={message} alt="" />
         <div className="like-count">{number}</div>
         <FaHeart

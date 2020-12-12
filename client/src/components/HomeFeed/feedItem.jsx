@@ -7,11 +7,12 @@ import { FaHeart, FaRegCommentDots, FaTimes, FaGift } from 'react-icons/fa';
 import ReactGiphySearchbox from 'react-giphy-searchbox';
 import Reply from './reply.jsx';
 
-const FeedItem = ({ post, user = {}, setPosts }) => {
+const FeedItem = ({ post, user = {}, setPosts, isDrawer }) => {
   const [show, setShow] = useState();
   const [name, setName] = useState();
   const [like, setLike] = useState();
   const [currentPost, setPost] = useState(post);
+  console.log(currentPost);
   const [number, setNumber] = useState(currentPost.likes.length);
   const [box, setBox] = useState(false);
   const [content, setContent] = useState('');
@@ -49,7 +50,7 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
         <h4 className="post-author">{`${name}`}</h4>
         <div id="post-content">
           {
-        currentPost.content.includes('</p>') ? (htmlParser(currentPost.content)) : currentPost.content
+        currentPost.content.includes('</') ? (htmlParser(currentPost.content)) : currentPost.content
         }
         </div>
         <div className="post-btn-container">
@@ -140,7 +141,7 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
         </div>
       </div>
       <div>
-        {currentPost.comment.map((value, i) => {
+        {isDrawer && currentPost.comment.map((value, i) => {
           return (
             <Reply
               className="reply"
