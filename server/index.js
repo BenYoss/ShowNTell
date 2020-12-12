@@ -433,14 +433,37 @@ app.get('/replys/:id/:content', (req, res) => {
   });
 });
 
+app.get('/replys/gif', (req, res) => {
+  Users.findOne({ id: req.cookies.ShowNTellId }).then((data) => {
+    userInfo = data;
+    Replys.create({
+      user: userInfo._id,
+      image: req.query.url,
+      content: '',
+      comment: [],
+      likes: [],
+    }).then(({ _id }) => {
+      Posts.findOne({ _id: req.query.feed }).then((data) => {
+        Posts.updateOne(
+          { _id: req.query.feed },
+          { comment: [...data.comment, _id] },
+        )
+          .then(() => Posts.findOne({ _id: req.query.feed }))
+          .then((result) => res.json(result));
+      });
+    });
+  });
+});
+
 app.post('/replys/gif', (req, res) => {
   Users.findOne({ id: req.cookies.ShowNTellId }).then((data) => {
     userInfo = data;
     Replys.create({
       user: userInfo._id,
-      content: req.body.url,
+      content: '',
       comment: [],
       likes: [],
+      image: req.body.url,
     }).then(({ _id }) => {
       Replys.findOne({ _id: req.body.feed }).then((data) => {
         Replys.updateOne(

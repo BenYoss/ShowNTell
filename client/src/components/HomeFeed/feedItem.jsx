@@ -16,6 +16,7 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
   const [box, setBox] = useState(false);
   const [content, setContent] = useState('');
   const [gifView, setgifView] = useState(false);
+
   const getShow = () => {
     if (!show) {
       axios(`/postShow/${currentPost.show}`).then(({ data }) => {
@@ -38,6 +39,22 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
     }
   };
 
+  const gifPost = (gif, id) => {
+    setgifView(false);
+    const obj = {
+      url: gif.images.original.url,
+      feed: id._id,
+    };
+
+    axios.get('/replys/gif', { params: obj })
+      .then(({ data }) => {
+        setPost(data);
+        axios.get('/posts').then((result) => {
+          setPosts(result.data);
+        });
+      });
+  };
+
   return (
     <div>
       <div className="main-post-container">
@@ -45,7 +62,7 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
         {getName()}
         {getLike()}
         <h2 className="post-show">{`${show}`}</h2>
-        <div id="post-show-title">{`${currentPost.title}`}</div>
+        <div id="post-show-title">{`${currentPost.title}` || null}</div>
         <h4 className="post-author">{`${name}`}</h4>
         <div id="post-content">
           {
@@ -53,7 +70,7 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
         }
         </div>
         <div className="post-btn-container">
-          <div className="like-count">{number}</div>
+          <div className="like-count">{number || null}</div>
           <FaHeart
             className={like ? 'liked-button' : 'post-like-btn'}
             onClick={() => {
@@ -95,7 +112,7 @@ const FeedItem = ({ post, user = {}, setPosts }) => {
               />
               <ReactGiphySearchbox
                 apiKey={process.env.GIPHY}
-                onSelect={(item) => console.info(item)}
+                onSelect={(item) => { gifPost(item, currentPost); }}
               />
             </div>
           )}

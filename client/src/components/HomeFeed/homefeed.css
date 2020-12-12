@@ -60,22 +60,16 @@
   color: white;
   margin-left: 15%;
   margin-bottom: 5%;
-  font-size: 14px;
  }
 
 .post-like-btn{
-    font-size: 24px;
-    display: inline-block;
-    width: 5%;
-    margin-right: 2%;
     color: #f0ccb3;
+    font-size: 24px;
 }
 
 .liked-button{
-  font-size: 24px;
-  display: inline-block;
-  margin-right: 2%;
   color: #dd3e42;
+  font-size: 24px;
 }
 .comment-btn{
   font-size: 24px;
@@ -102,12 +96,8 @@
   color: #f0ccb3;
   margin-left: 26%;
   position: relative;
-  bottom: 38px;
 }
 
-.comment-box{
-
-}
 .comment-txt-box{
   background-color: #1d3b61;
   color: white;
@@ -141,11 +131,12 @@
   border-radius: 25px;
   margin-top: 2%;
   color: white;
-  margin-left: 10%;
+  margin-left: 5%;
  }
 
  .comment-author{
-  margin-top: 3.5%;
+  margin-top: 0;
+  padding-top: 25px;
   margin-left: 5%;
   margin-bottom: -2%;
   color: #408ac8;
@@ -165,7 +156,6 @@
   margin-right: 3%;
   height: 50px;
   width: 200px;
-  margin-left: 25%;
   border-radius: 25px;
   margin-bottom: 3%;
   text-align: center;
@@ -233,4 +223,15 @@
   padding-left: 12px;
   padding-bottom: 2px;
   display: inline-block;
+}
+
+.gif{
+  margin-left: 10%;
+  margin-bottom: 5%;
+  display: block;
+}
+
+.icon-container{
+  display: flex;
+  justify-content: center;
 }
